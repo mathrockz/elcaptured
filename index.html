@@ -10,6 +10,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div>
+    <h2>ELCAPTURED</h2>
+  </div>
+  <div id="content">
+    <p>Click and drag to scroll</p>
+  </div>
   <script type="module">
     import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.0/build/three.module.js';
 
@@ -48,7 +54,7 @@
     const meshes = [];
 
     images.forEach((texture, index) => {
-      const geometry = new THREE.PlaneGeometry(1.2, 1.5);
+      const geometry = new THREE.PlaneGeometry(3, 3);
       const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
       const mesh = new THREE.Mesh(geometry, material);
 
@@ -121,7 +127,6 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
   </script>
-
-    <h2>ELCAPTURED</h2>
+  <script src="script.js"></script>
 </body>
 </html>

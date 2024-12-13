@@ -7,7 +7,6 @@ h1, h2, h3, h4{
     width: 20vw;
     margin-left:auto;
     margin-right:auto;
-    padding-top:50px;
 }
 
 h5{
@@ -19,6 +18,16 @@ h5{
     margin-right:auto;
     padding-top:50px;
 }
+
+body {
+  font-family: "Playfair Display", serif;
+  text-align: center;
+}
+
+#content {
+  transition: opacity 2s;
+}
+
 
 h1{
     font-family: "Newsreader", serif;
