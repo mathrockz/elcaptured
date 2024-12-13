@@ -10,38 +10,118 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header class="fixed-header">
-        <div class="container">
-          <nav>
-            <ul>
-              <li><a href="#1">Style 1</a></li>
-              <li><a href="#2">Style 2</a></li>
-              <li><a href="#3">Style 3</a></li>
-            </ul>
-          </nav>
-        </div>
-      </header>
-      <main>
-        <section id="1">
-            <h1>ELCAPTURED</h1>
-            <div>
-                <img src="images/1.jpg">
-            </div>
-        </section>
-        <section id="2">
-            <h2>ELCAPTURED</h2>
-            <p>This is Section 2</p>
-        </section>
-        <section id="3">
-            <h3>ELCAPTURED</h3>
-            <p>This is Section 3</p>
-        </section>
-      </main>
+  <script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.0/build/three.module.js';
 
+    // Create Scene
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xffffff);
 
+    // Create Camera window.innerWidth window.innerHeight
+    const camera = new THREE.PerspectiveCamera(80, 300/100 , 0.1, 1000);
+    camera.position.z = 5;
+// window.innerHeight
+    // Create Renderer
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth,800);
+    document.body.appendChild(renderer.domElement);
 
-    <br>
-    <br>
-    <br>
+    // Load Textures
+    const textureLoader = new THREE.TextureLoader();
+    const imagePaths = [
+    'https://images.squarespace-cdn.com/content/v1/65485684637f4101e1632913/d49a6e47-1058-4c25-9810-377abacd2d3b/1.jpg?format=1000w',
+    'https://images.squarespace-cdn.com/content/v1/65485684637f4101e1632913/bd11c7aa-ea3b-4147-9041-4139687123ce/2.jpg?format=1000w',
+    'https://images.squarespace-cdn.com/content/v1/65485684637f4101e1632913/cc3b04b1-8542-4ed1-93ff-938cce47fdcb/3.jpg?format=1000w',
+    'https://images.squarespace-cdn.com/content/v1/65485684637f4101e1632913/ab9335a9-0d0b-432b-9050-07af3cfb7154/4.jpg?format=1000w',
+    'https://images.squarespace-cdn.com/content/v1/65485684637f4101e1632913/7cd90734-2c9f-43b3-a99f-0562b59bf646/5.jpg?format=1000w',
+    'https://images.squarespace-cdn.com/content/v1/65485684637f4101e1632913/d3d90f7f-5469-4354-ae5c-8586bb6bf760/6.jpg?format=1000w',
+    'https://images.squarespace-cdn.com/content/v1/65485684637f4101e1632913/aa440a2b-3005-4253-8e88-28abe65eafca/7.jpg?format=1000w',
+    'https://images.squarespace-cdn.com/content/v1/65485684637f4101e1632913/d863b47c-4af3-4a8e-8924-ba3a4f47b5ac/8.jpg?format=1000w',
+    'https://images.squarespace-cdn.com/content/v1/65485684637f4101e1632913/20af8610-89c6-4992-b873-f28a2279cfa4/9.jpg?format=1000w'
+    ];
+    const images = imagePaths.map(path => textureLoader.load(path));
+
+    // Create an External Carousel
+    const group = new THREE.Group();
+    const radius = 4.8; // Carousel radius
+    const angleStep = (Math.PI * 2) / images.length;
+    const meshes = [];
+
+    images.forEach((texture, index) => {
+      const geometry = new THREE.PlaneGeometry(1.2, 1.5);
+      const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
+      const mesh = new THREE.Mesh(geometry, material);
+
+      const angle = index * angleStep;
+      mesh.position.set(
+        Math.sin(angle) * radius, // Horizontal position (outward)
+        0,                        // Vertical position
+        Math.cos(angle) * radius  // Depth position (outward)
+      );
+      mesh.lookAt(mesh.position.clone().add(new THREE.Vector3(0, 0, 0).sub(mesh.position))); // Face outward
+      group.add(mesh);
+      meshes.push(mesh);
+    });
+
+    scene.add(group);
+
+    // Interaction Variables
+    let isDragging = false;
+    let previousMousePosition = 0;
+
+    // Raycaster for detecting clicks
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+
+    // Add Event Listeners
+    window.addEventListener('pointerdown', (event) => {
+      isDragging = true;
+      previousMousePosition = event.clientX;
+    });
+
+    window.addEventListener('pointermove', (event) => {
+      if (isDragging) {
+        const deltaX = event.clientX - previousMousePosition;
+        group.rotation.y -= deltaX * 0.005; // Adjust sensitivity
+        previousMousePosition = event.clientX;
+      }
+    });
+
+    window.addEventListener('pointerup', () => {
+      isDragging = false;
+    });
+
+    window.addEventListener('pointerclick', (event) => {
+      // Get mouse position normalized to [-1, 1]
+      pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+      pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      // Cast a ray to detect clicks
+      raycaster.setFromCamera(pointer, camera);
+      const intersects = raycaster.intersectObjects(meshes);
+
+      if (intersects.length > 0) {
+        const clickedMesh = intersects[0].object;
+        const clickedIndex = meshes.indexOf(clickedMesh);
+      }
+    });
+
+    // Animation Loop
+    const animate = () => {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    };
+
+    animate();
+
+    // Handle Window Resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+
+    <h2>ELCAPTURED</h2>
 </body>
 </html>

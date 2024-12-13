@@ -1,3 +1,7 @@
+html, body {
+  overflow-x: hidden;
+}
+
 h1, h2, h3, h4{
     display:block;
     width: 20vw;
@@ -119,84 +123,3 @@ h3{
 img{
   max-width:300px;
 }
-
-
-
-
-
-
-
-
-
-
-
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  .fixed-header {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background-color: #ffffff;
-    color: white;
-    padding: 10px 0;
-    z-index: 1000;
-  }
-  
-  .fixed-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin-left:auto;
-    margin-right:auto;
-    padding: 0 20px;
-  }
-  
-  .fixed-header h1 {
-    font-size: 24px;
-  }
-  
-  .fixed-header nav ul {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-  }
-  
-  .fixed-header nav ul li {
-    display:flex;
-    font-size:50px;
-    width: 20vw;
-    margin-left:auto;
-    margin-right:auto;
-  }
-  
-  .fixed-header nav ul li a {
-    color: rgb(0, 0, 0);
-    text-decoration: none;
-    font-size: 20px;
-    font-family: Arial, Helvetica, sans-serif;
-    transition: color 0.3s;
-  }
-  
-  .fixed-header nav ul li a:hover {
-    color: #bababa; /* Tomato color */
-  }
-  
-  main {
-    padding-top: 80px; /* Add padding to account for the fixed header */
-  }
-  
-  section {
-    padding: 50px 20px;
-    margin: 0 auto;
-  }
-  
-  section:not(:last-child) {
-    margin-bottom: 50px;
-    border-bottom: 1px solid #ddd;
-  }
-  
